@@ -76,4 +76,3 @@ puma_count_map<-leaflet(data=hhs_pumas) %>%
   addTiles()
 
 
-transit_trip_map <-
