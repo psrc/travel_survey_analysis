@@ -1,5 +1,5 @@
 source('travel_survey_analysis_functions.R')
-
+library(data.table)
 
 
 
@@ -20,9 +20,13 @@ hh_wt_combined FROM HHSurvey.v_persons_2017_2019_in_house")
 
 persons<-read.dt(sql.person.query, 'sqlquery')
 
+
+
 race_cols <- c('race_afam', 'race_aiak', 'race_asian', 'race_hapi', 'race_hisp', 'race_white', 'race_other')
 race_cols_non_hisp <- c('race_afam', 'race_aiak', 'race_asian', 'race_hapi', 'race_white', 'race_other')
 non_white_races<-c('race_afam', 'race_aiak', 'race_asian', 'race_hapi', 'race_other')
+
+                                            
 
 persons<-persons %>% mutate_at(race_cols,funs(recode(.,'Selected'=1, 'Not Selected'=0, .default=0))) %>%
                     mutate_at(race_cols,funs(as.numeric(.))) %>%
@@ -42,9 +46,26 @@ persons<-persons %>%
                                          race_white==1 ~ "Non-Hispanic, White")
   )
 
+
 persons<- persons %>%
-  mutate(model_race_category=replace_na(model_race_category='Missing'))
-         
+  mutate(model_race_category = replace_na(model_race_category, 'Missing'))
+
+count_model_race<-persons%>%group_by(model_race_category)%>%summarize(n=n())
+
+write.table(count_model_race, "clipboard", sep="\t", row.names=FALSE)
+
+persons<-persons %>% mutate(combined_race='')
+for (race in race_cols){
+print(race)
+persons<-persons %>% mutate(combined_race=case_when(
+                                          race==1 ~ paste(combined_race, race, sep = "_"),
+                                          TRUE ~ combined_race
+))
+                                                           
+}
+
+
+                                                
   
 
 
