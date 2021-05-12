@@ -35,80 +35,8 @@ describe()
 #to delete NA you can use the following code
 #the best practices suggest to create a new variable with the updated table
 
-person_no_na = person %>% filter(!is.na(mode_freq_1))
-
-#when we re-run the distribution code, we see that we've eliminated NAs
-person_no_na %>% group_by(mode_freq_1) %>% summarise(n=n())
-
-# to exclude missing codes, you can use the following code
-#note, that we've assigned missing_codes at the beginning of the script(lines 20-21)
-person_no_na = person_no_na %>% filter(!mode_freq_1 %in% missing_codes)
-
-
-#Create summaries
-
-# to create a summary table based on one variable, you can use create_table_one_var function.
-#The function create_table_one_var has 3 arguments:
-# first, you have to specify the variable you are analyzing
-#second, enter table name
-#third, specify the table type e.g. person, household, vehicle, trip, or day. This will
-# help to use correct weights
-
-#here is an example for mode_freq_5 variable
-
-transit<-create_table_one_var("mode_freq_1", person_no_na,"person" )
-write.table(transit, "clipboard", sep="\t", row.names=FALSE)
-
-
-
-
-person_no_na = person %>% filter(!is.na(mode_freq_2))
-
-#when we re-run the distribution code, we see that we've eliminated NAs
-person_no_na %>% group_by(mode_freq_2) %>% summarise(n=n())
-
-# to exclude missing codes, you can use the following code
-#note, that we've assigned missing_codes at the beginning of the script(lines 20-21)
-person_no_na = person_no_na %>% filter(!mode_freq_2 %in% missing_codes)
-
-
-#Create summaries
-
-# to create a summary table based on one variable, you can use create_table_one_var function.
-#The function create_table_one_var has 3 arguments:
-# first, you have to specify the variable you are analyzing
-#second, enter table name
-#third, specify the table type e.g. person, household, vehicle, trip, or day. This will
-# help to use correct weights
-
-#here is an example for mode_freq_5 variable
-
-transit<-create_table_one_var("mode_freq_2", person_no_na,"person" )
-write.table(transit, "clipboard", sep="\t", row.names=FALSE)
-
-
-
-
 person_no_na = person %>% filter(!is.na(mode_freq_3))
 
-#when we re-run the distribution code, we see that we've eliminated NAs
-person_no_na %>% group_by(mode_freq_3) %>% summarise(n=n())
+walk<-person_no_na %>% group_by(mode_freq_3) %>% summarise(tot_people=sum(hh_wt_2019))
 
-# to exclude missing codes, you can use the following code
-#note, that we've assigned missing_codes at the beginning of the script(lines 20-21)
-person_no_na = person_no_na %>% filter(!mode_freq_3 %in% missing_codes)
-
-
-#Create summaries
-
-# to create a summary table based on one variable, you can use create_table_one_var function.
-#The function create_table_one_var has 3 arguments:
-# first, you have to specify the variable you are analyzing
-#second, enter table name
-#third, specify the table type e.g. person, household, vehicle, trip, or day. This will
-# help to use correct weights
-
-#here is an example for mode_freq_5 variable
-
-transit<-create_table_one_var("mode_freq_3", person_no_na,"person" )
-write.table(transit, "clipboard", sep="\t", row.names=FALSE)
+write.table(walk, "clipboard", sep="\t", row.names=FALSE)
